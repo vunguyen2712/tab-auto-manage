@@ -11,8 +11,7 @@
   },
   "default_locale": "en",
   "background": {
-    "page": "src/bg/background.html",
-    "persistent": true
+    "page": "./src/bg/background.html"
   },
   "options_page": "src/options_custom/index.html",
   "browser_action": {
@@ -21,26 +20,24 @@
     "default_popup": "src/browser_action/browser_action.html"
   },
   "permissions": [
+    "alarms",
+    "background",
     "cookies",
     "history",
     "idle",
     "notifications",
     "tabs",
-    "https://*",
-    "http://*"
+    "http://*/*",
+    "https://*/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "https://www.google.com/*"
+        "http://*/*",
+        "https://*/*"
       ],
       "css": [
         "src/inject/inject.css"
-      ]
-    },
-    {
-      "matches": [
-        "https://www.google.com/*"
       ],
       "js": [
         "src/inject/inject.js"
