@@ -11,7 +11,14 @@
 	}
 </style>
 
+<script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../../node_modules/rangeslider.js/dist/rangeslider.min.js"></script>
+<script src="browser-action.js"></script>
+
 <div id="mainPopup">
-<h1>Hello extensionizr!</h1>
+	<div class="content">
+		<input type="range" min="1" max="100" value="20" data-rangeslider>
+	</div>
+<h1>Hello extension popup!</h1>
 <p>To shut this popup down, edit the manifest file and remove the "default popup" key. To edit it, just edit ext/browser_action/browser_action.html. The CSS is there, too.</p>
 </div>

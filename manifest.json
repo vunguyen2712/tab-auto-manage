@@ -11,7 +11,8 @@
   },
   "default_locale": "en",
   "background": {
-    "page": "./src/bg/background.html"
+    "page": "./src/bg/background.html",
+    "persistent": false
   },
   "options_page": "src/options_custom/index.html",
   "browser_action": {
