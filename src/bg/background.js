@@ -24,7 +24,7 @@
   -- Extension setting --
 */
 var timeToKeepInMinutes = 1/12; // double
-var minTabsKept = 10; // min number of tabs user want to keep
+var minTabsKept = 20; // min number of tabs user want to keep
 
 var currentTabIdStr = "";
 var totalOpenTabs = 0;
@@ -40,9 +40,9 @@ chrome.tabs.onCreated.addListener(function(tab) {
     var tabUrl = tab.url;
     var alarmName = tabId.toString();
     // console.log("just created. Tab id: " + tabId);
-    if (totalOpenTabs > minTabsKept) {
-        chrome.alarms.create(alarmName, {delayInMinutes: timeToKeepInMinutes});
-    }
+    // if (totalOpenTabs > minTabsKept) {
+    //     chrome.alarms.create(alarmName, {delayInMinutes: timeToKeepInMinutes});
+    // }
 
     // alert("just created. Tab id: " + tab);
 });
@@ -51,24 +51,25 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
     --totalOpenTabs;
     // if totalOpenTabs <= minTabsKept remove all alarms to keep all current tabs
     if (totalOpenTabs <= minTabsKept) {
-        console.log("Having minTabsKept of tabs or less. Thus clearing all alarms");
+        console.log("Having minTabsKept of tabs or less. Thus, clearing all alarms");
         chrome.alarms.clearAll(function (wasCleared){
             console.log("Cleared all Alarms");
         });
     }
 });
 
-chrome.alarms.onAlarm.addListener(function(alarm){
+chrome.alarms.onAlarm.addListener(function(alarm) {
     clearAlarm(alarm.name);
     closeTabOnAlarm(alarm.name); // disable for debugging
     console.log(alarm);
 });
 
 // Listen when switching to a new tab
-chrome.tabs.onActivated.addListener(function (activeInfoObj){
+chrome.tabs.onActivated.addListener(function (activeInfoObj) {
     // Create an alarm for the previously active tab to CLOSE tab at timeToKeepInMinutes
     if (currentTabIdStr && totalOpenTabs > minTabsKept){
         chrome.alarms.create(currentTabIdStr, {delayInMinutes: timeToKeepInMinutes});
+        console.log("Created alarm for " + currentTabIdStr);
     }
     // clear the alarm for the active tab to KEEP it OPEN
     var tabIdStr = activeInfoObj.tabId.toString();  // alarmName (string) is same as tabId (int) but diff types
@@ -121,7 +122,7 @@ function getAllAlarms() { // for debugging
 function init() {
     // count tabs
     countOpenTabs();
-    // set alarms on all tab except for the active one
+    // will not set alarms for all tabs on init and start setting alarm for 1 tab when user switches tab
 }
 
 alert("background is running");

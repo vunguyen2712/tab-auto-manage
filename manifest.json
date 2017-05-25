@@ -14,20 +14,19 @@
     "scripts": ["./src/js-lib/jquery-3.2.1.min.js", "./src/bg/background.js"],
     "persistent": false
   },
-  "options_page": "src/options_custom/index.html",
+  "options_page": "src/options-custom/index.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "browser action demo",
-    "default_popup": "src/browser_action/browser_action.html"
+    "default_popup": "src/browser-action/browser-action.html"
   },
   "permissions": [
     "alarms",
     "background",
+    "storage",
+    "tabs",
     "cookies",
     "history",
-    "idle",
-    "notifications",
-    "tabs",
     "http://*/*",
     "https://*/*"
   ],
