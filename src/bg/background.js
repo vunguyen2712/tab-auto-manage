@@ -24,7 +24,7 @@
   -- Extension setting --
 */
 var timeToKeepInMinutes = 1/12; // double
-var minTabsKept = 10;
+var minTabsKept = 10; // min number of tabs user want to keep
 
 var currentTabIdStr = "";
 var totalOpenTabs = 0;
@@ -35,32 +35,39 @@ var totalOpenTabs = 0;
 */
 
 chrome.tabs.onCreated.addListener(function(tab) {
+    ++totalOpenTabs;
     var tabId = tab.id;
     var tabUrl = tab.url;
-    var idList = "";
-    var alarmName = "" + tabId;
+    var alarmName = tabId.toString();
     // console.log("just created. Tab id: " + tabId);
-    chrome.alarms.create(alarmName, {delayInMinutes: timeToKeepInMinutes});
-    chrome.tabs.query({}, function(tabs){
-        for (var i = 0; i < tabs.length; i++) {
-            idList += tabs[i].id + " ";
-        }
-        // alert("Id list is:" + idList);
-    });
+    if (totalOpenTabs > minTabsKept) {
+        chrome.alarms.create(alarmName, {delayInMinutes: timeToKeepInMinutes});
+    }
 
     // alert("just created. Tab id: " + tab);
 });
 
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
+    --totalOpenTabs;
+    // if totalOpenTabs <= minTabsKept remove all alarms to keep all current tabs
+    if (totalOpenTabs <= minTabsKept) {
+        console.log("Having minTabsKept of tabs or less. Thus clearing all alarms");
+        chrome.alarms.clearAll(function (wasCleared){
+            console.log("Cleared all Alarms");
+        });
+    }
+});
+
 chrome.alarms.onAlarm.addListener(function(alarm){
-    closeTabOnAlarm(alarm.name); // disable for debugging
     clearAlarm(alarm.name);
+    closeTabOnAlarm(alarm.name); // disable for debugging
     console.log(alarm);
 });
 
 // Listen when switching to a new tab
 chrome.tabs.onActivated.addListener(function (activeInfoObj){
     // Create an alarm for the previously active tab to CLOSE tab at timeToKeepInMinutes
-    if (currentTabIdStr){
+    if (currentTabIdStr && totalOpenTabs > minTabsKept){
         chrome.alarms.create(currentTabIdStr, {delayInMinutes: timeToKeepInMinutes});
     }
     // clear the alarm for the active tab to KEEP it OPEN
@@ -114,7 +121,7 @@ function getAllAlarms() { // for debugging
 function init() {
     // count tabs
     countOpenTabs();
-    // set alarms on all tab except for the active ones
+    // set alarms on all tab except for the active one
 }
 
 alert("background is running");
