@@ -1,29 +1,81 @@
 angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
     .controller('myAppController', ['$scope', 'myAppFactory', function ($scope, myAppFactory) {
 
+        $scope.autoClosedHistory = [];
         $scope.gridOptions = {
-            data: [],
+            data: [
+              {
+                tabId: 'tabId test',
+                tabUrl: 'tab url',
+                tabTitle: 'tab Title',
+                tabFavIconUrl: 'tab favicon',
+                tabIndex: 'tab index'
+              }
+            ],
             urlSync: false
         };
-        myAppFactory.getData().then(function (responseData) {
-            $scope.gridOptions.data = responseData.data;
+
+        $scope.gridActions = {};
+
+        chrome.storage.sync.clear(function (callback){
+            console.log('Clearing old sync data');
+        });
+        // myAppFactory.getData().then(function (responseData) {
+        //     $scope.gridOptions.data = responseData.data;
+        // });
+
+        // function storeUserPrefs() {
+        //     var testPrefs = {'val': 10};
+        //         chrome.storage.sync.set({'myKey': testPrefs}, function() {
+        //             console.log('Saved', 'myKey', testPrefs);
+        //             getUserPrefs();
+        //         });
+        // }
+
+        // update if the page is open
+        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+                // sender is tab object and has all tab info
+                console.log(sender.tab ?
+                          "from a content script:" + sender.tab.url :
+                          "from the extension");
+                var tabInfo = {
+                    tabId: sender.tab.id,
+                    tabUrl: sender.tab.url,
+                    tabTitle: sender.tab.title,
+                    tabFavIconUrl: sender.tab.favIconUrl,
+                    tabIndex: sender.tab.index
+                };
+
+                $scope.gridOptions.data.push(tabInfo);
+                console.log('$scope.gridOptions.data: ');
+                console.log($scope.gridOptions.data);
+                $scope.$apply();
+
+                if (request.greeting == "hello")
+                    sendResponse({farewell: "goodbye"});
         });
 
-        function storeUserPrefs() {
-            var testPrefs = {'val': 10};
-                chrome.storage.sync.set({'myKey': testPrefs}, function() {
-                    console.log('Saved', 'myKey', testPrefs);
-                    getUserPrefs();
-                });
-        }
+        // $scope.$watch('$scope.gridOptions.data', function(){
+        //     console.log('grid option data changed!');
+        //     $scope.gridActions.refresh();
+        // });
 
-        function getUserPrefs() {
-            chrome.storage.sync.get('myKey', function (obj) {
-                console.log('myKey', obj);
+        function init(){
+            // get the entire contents of storage.
+            chrome.storage.sync.get(null, function (items) {
+                console.log('contents of storage:');
+                console.log(items);
             });
         }
 
-        storeUserPrefs();
+        init();
+        // function getUserPrefs() {
+        //     chrome.storage.sync.get('myKey', function (obj) {
+        //         console.log('myKey', obj);
+        //     });
+        // }
+
+        // storeUserPrefs();
 
     }])
     .factory('myAppFactory', function ($http) {
