@@ -24,7 +24,7 @@
   -- Extension setting --
 */
 var timeToKeepInMinutes = 1/12; // double
-var minTabsKept = 20; // min number of tabs user want to keep
+var minTabsKept = 5; // min number of tabs user want to keep
 
 var currentTabIdStr = "";
 var totalOpenTabs = 0;
@@ -40,15 +40,24 @@ chrome.tabs.onCreated.addListener(function(tab) {
     var tabUrl = tab.url;
     var alarmName = tabId.toString();
     // console.log("just created. Tab id: " + tabId);
-    // if (totalOpenTabs > minTabsKept) {
-    //     chrome.alarms.create(alarmName, {delayInMinutes: timeToKeepInMinutes});
-    // }
-
-    // alert("just created. Tab id: " + tab);
 });
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
     --totalOpenTabs;
+    // create object to be store
+    var storeKey = tabId; // integer
+    var storeVal = {};
+    chrome.tabs.get(tabId, function (tab){
+        storeVal.url = tab.url;
+        storeVal.title = tab.title;
+        storeVal.favIconUrl = tab.favIconUrl;
+        storeVal.index = tab.index;
+    });
+
+    var storeObj = {};
+    storeObj[tabId] = storeVal;
+    storeObject(storeObj);
+
     // if totalOpenTabs <= minTabsKept remove all alarms to keep all current tabs
     if (totalOpenTabs <= minTabsKept) {
         console.log("Having minTabsKept of tabs or less. Thus, clearing all alarms");
@@ -116,6 +125,22 @@ function getAllAlarms() { // for debugging
     chrome.alarms.getAll(function (alarms){
         var alarmListStr = alarms.toString();
         console.log(alarmListStr);
+    });
+}
+
+function storeObject(key, value) {
+    var storeObj = {};
+    storeObj[key] = value;
+    storeObject(storeObj);
+    chrome.storage.sync.set(storeObj, function() {
+        if (chrome.runtime.error) {
+            console.log("Runtime error.");
+        } else {
+            chrome.tabs.sendMessage(key, storeObj, function(response) {
+                // console.log(response.farewell);
+            });
+            console.log('Successfully Stored object with key: ' + key);
+        }
     });
 }
 
