@@ -19,12 +19,12 @@
       <div flex-gt-md="60" flex-md="80" flex-xs="100">
           <div  layout="row" layout-align="center start">
               <md-input-container md-no-float md-is-error="false" class="md-block flex-gt-xs flex-xs">
-                  <input ng-model="code"
+                  <input ng-model="tabUrl"
                          class="md-input"
                          ng-change="gridActions.filter()"
                          id="order"
-                         placeholder="Search by Order #"
-                         filter-by="code"
+                         placeholder="Search by Url"
+                         filter-by="tabUrl"
                          filter-type="text"
                          aria-invalid="false">
               </md-input-container>
@@ -82,11 +82,14 @@
                   <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
                       <thead>
                       <tr>
-                          <th sortable="code" class="sortable mdl-data-table__cell--non-numeric">
-                              <span>Order #</span>
+                          <th sortable="tabUrl" class="sortable mdl-data-table__cell--non-numeric">
+                              <span>Web Title</span>
+                          </th>
+                          <th class="favicon">
+                              <span>Favicon</span>
                           </th>
                           <th class="st-sort-disable th-dropdown">
-                              <md-select filter-by="statusDisplay"
+                              <!-- <md-select filter-by="statusDisplay"
                                          filter-type="select"
                                          ng-model="status"
                                          placeholder="Status"
@@ -96,12 +99,12 @@
                                              value="{{option.value}}">
                                       {{option.text}}
                                   </md-option>
-                              </md-select>
+                              </md-select> -->
                           </th>
                           <th sortable="placed" class="sortable">
                               <span>Date Placed</span>
                           </th>
-                          <th sortable='total.value' class="sortable">
+                          <th sortable="tabTitle" class="sortable">
                               <span>Total</span>
                           </th>
                       </tr>
@@ -109,11 +112,16 @@
                       <tbody>
                       <tr grid-item>
                           <td class="mdl-data-table__cell--non-numeric">
-                              <span ng-bind="item.code"></span>
+                              <span ng-bind="item.tabUrl"></span>
                           </td>
-                          <td ng-bind="item.statusDisplay"></td>
+                          <td>
+                              <div class="website-icon" id="icon" style="background-image: url({{item.tabFavIconUrl}})"></div>
+                          </td>
+                          <td>
+                          </td>
+                          <!-- <td ng-bind="item.tabFavIconUrl"></td> -->
                           <td ng-bind="item.placed | date:'MM/dd/yyyy'"></td>
-                          <td ng-bind="item.total.formattedValue"></td>
+                          <td ng-bind="item.tabTitle"></td>
                       </tr>
                       </tbody>
                   </table>

@@ -106,6 +106,15 @@ ul.pagination {
   display: none;
 }
 
+.website-icon {
+  -webkit-margin-end: 16px;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  height: 16px;
+  width: 16px;
+  display: block;
+}
+
 /* fallback */
 @font-face {
   font-family: 'Material Icons';
