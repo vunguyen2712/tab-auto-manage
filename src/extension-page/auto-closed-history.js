@@ -46,13 +46,20 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
                     tabIndex: sender.tab.index
                 };
 
-                $scope.gridOptions.data.push(tabInfo);
+                // avoid storing empty url and new tab pages in the history
+                if (tabInfo.tabUrl && tabInfo.tabUrl.indexOf('chrome://') !== 0){
+                    $scope.gridOptions.data.push(tabInfo);
+                }
                 console.log('$scope.gridOptions.data: ');
                 console.log($scope.gridOptions.data);
                 $scope.$apply();
 
-                if (request.greeting == "hello")
+                console.log('The message sent is:');
+                console.log(request);
+                if (request.action == "store"){
                     sendResponse({farewell: "goodbye"});
+                }
+                return true; // indicate sending a response asynchronously
         });
 
         // $scope.$watch('$scope.gridOptions.data', function(){

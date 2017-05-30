@@ -106,6 +106,13 @@ ul.pagination {
   display: none;
 }
 
+
+#title-and-domain {
+  align-items: center;
+  /*display: flex;
+  flex: 1; this causes extra under line*/
+  overflow: hidden;
+}
 .website-icon {
   -webkit-margin-end: 16px;
   background-repeat: no-repeat;
