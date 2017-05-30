@@ -85,9 +85,9 @@
                           <th sortable="tabUrl" class="sortable mdl-data-table__cell--non-numeric">
                               <span>Web Title</span>
                           </th>
-                          <th class="favicon">
+                          <!-- <th class="favicon">
                               <span>Favicon</span>
-                          </th>
+                          </th> -->
                           <th class="st-sort-disable th-dropdown">
                               <!-- <md-select filter-by="statusDisplay"
                                          filter-type="select"
@@ -111,12 +111,13 @@
                       </thead>
                       <tbody>
                       <tr grid-item>
-                          <td class="mdl-data-table__cell--non-numeric">
-                              <span ng-bind="item.tabUrl"></span>
-                          </td>
-                          <td>
+                          <td id="title-and-domain" class="mdl-data-table__cell--non-numeric">
                               <div class="website-icon" id="icon" style="background-image: url({{item.tabFavIconUrl}})"></div>
+                              <a href="{{item.tabUrl}}"><div ng-bind="item.tabTitle"></div></a>
                           </td>
+                          <!-- <td>
+
+                          </td> -->
                           <td>
                           </td>
                           <!-- <td ng-bind="item.tabFavIconUrl"></td> -->
