@@ -110,7 +110,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <tr grid-item>
+                      <tr grid-item ng-if="gridOptions.data">
                           <td id="title-and-domain" class="mdl-data-table__cell--non-numeric">
                               <div class="website-icon" id="icon" style="background-image: url({{item.tabFavIconUrl}})"></div>
                               <a href="{{item.tabUrl}}"><div ng-bind="item.tabTitle"></div></a>

@@ -4,13 +4,13 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
         $scope.autoClosedHistory = [];
         $scope.gridOptions = {
             data: [
-              {
-                tabId: 'tabId test',
-                tabUrl: 'tab url',
-                tabTitle: 'tab Title',
-                tabFavIconUrl: 'tab favicon',
-                tabIndex: 'tab index'
-              }
+              // {
+              //   tabId: 'tabId test',
+              //   tabUrl: 'tab url',
+              //   tabTitle: 'tab Title',
+              //   tabFavIconUrl: 'tab favicon',
+              //   tabIndex: 'tab index'
+              // }
             ],
             urlSync: false
         };
@@ -72,6 +72,12 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
             chrome.storage.sync.get(null, function (items) {
                 console.log('contents of storage:');
                 console.log(items);
+            });
+
+            chrome.runtime.sendMessage({action: 'getInitData'}, function(response) {
+                console.log(response.data);
+                $scope.gridOptions.data = response.data;
+                $scope.$apply(); // update ui
             });
         }
 

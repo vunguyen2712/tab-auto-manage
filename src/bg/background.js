@@ -29,6 +29,7 @@ var minTabsKept = 12; // min number of tabs user want to keep
 var currentTabIdStr = "";
 var totalOpenTabs = 0;
 var totalActiveAlarms = 0;
+var closedTabsHistoryData = [];
 
 
 /*
@@ -41,6 +42,35 @@ chrome.tabs.onCreated.addListener(function(tab) {
     var tabUrl = tab.url;
     var alarmName = tabId.toString();
     // console.log("just created. Tab id: " + tabId);
+});
+
+// Use onUpdated along with onCreated event to detect switching tab
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatedTab) {
+    chrome.tabs.query({'active': true}, function (activeTabs) {
+        var activeTab = activeTabs[0];
+        console.log('activeTab is: ');
+        console.log(activeTab.url);
+
+        // When auto-closed-history tab is open --> send data to display
+        // When auto-closed-history tab is closed --> we just have to keep track of closed-tabs data in the backgroundjs
+        if (changeInfo.url && changeInfo.url.indexOf('auto-closed-history.html') > -1) {
+            console.log('History page is open');
+            // send closed-tabs-history data to auto-closed-history page
+
+        } else {
+            console.log('Tab changed, but not to History page');
+        }
+    });
+});
+
+// handle init data request to auto-closed-history page
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(sender.tab ?
+                  "from a content script:" + sender.tab.url :
+                  "from the extension");
+      if (request.action == 'getInitData')
+          sendResponse({data: closedTabsHistoryData});
 });
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
@@ -62,24 +92,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 });
 
 // Listen when switching to a new tab
-// chrome.tabs.onActivated.addListener(function (activeInfoObj) {
-//     // Create an alarm for the previously active tab to CLOSE tab at timeToKeepInMinutes
-//     if (currentTabIdStr && totalOpenTabs > minTabsKept){
-//         chrome.alarms.create(currentTabIdStr, {delayInMinutes: timeToKeepInMinutes});
-//         ++totalActiveAlarms;
-//         console.log("Created alarm for " + currentTabIdStr);
-//     }
-//     // clear the alarm for the active tab to KEEP it OPEN
-//     var tabIdStr = activeInfoObj.tabId.toString();  // alarmName (string) is same as tabId (int) but diff types
-//     if (totalActiveAlarms > 0) {
-//         clearAlarm(tabIdStr);
-//     }
-//     // Make currentTab become previous active tab var
-//     currentTabIdStr = tabIdStr;
-// });
-
-// Listen when switching to a new tab
-chrome.tabs.onHighlighted.addListener(function (highlightInfo) {
+chrome.tabs.onActivated.addListener(function (activeInfoObj) {
     // Create an alarm for the previously active tab to CLOSE tab at timeToKeepInMinutes
     if (currentTabIdStr && totalOpenTabs > minTabsKept){
         chrome.alarms.create(currentTabIdStr, {delayInMinutes: timeToKeepInMinutes});
@@ -87,13 +100,30 @@ chrome.tabs.onHighlighted.addListener(function (highlightInfo) {
         console.log("Created alarm for " + currentTabIdStr);
     }
     // clear the alarm for the active tab to KEEP it OPEN
-    var tabIdStr = highlightInfo.tabIds[0].toString();  // alarmName (string) is same as tabId (int) but diff types
+    var tabIdStr = activeInfoObj.tabId.toString();  // alarmName (string) is same as tabId (int) but diff types
     if (totalActiveAlarms > 0) {
         clearAlarm(tabIdStr);
     }
     // Make currentTab become previous active tab var
     currentTabIdStr = tabIdStr;
 });
+
+// Listen when switching to a new tab
+// chrome.tabs.onHighlighted.addListener(function (highlightInfo) {
+//     // Create an alarm for the previously active tab to CLOSE tab at timeToKeepInMinutes
+//     if (currentTabIdStr && totalOpenTabs > minTabsKept){
+//         chrome.alarms.create(currentTabIdStr, {delayInMinutes: timeToKeepInMinutes});
+//         ++totalActiveAlarms;
+//         console.log("Created alarm for " + currentTabIdStr);
+//     }
+//     // clear the alarm for the active tab to KEEP it OPEN
+//     var tabIdStr = highlightInfo.tabIds[0].toString();  // alarmName (string) is same as tabId (int) but diff types
+//     if (totalActiveAlarms > 0) {
+//         clearAlarm(tabIdStr);
+//     }
+//     // Make currentTab become previous active tab var
+//     currentTabIdStr = tabIdStr;
+// });
 
 chrome.browserAction.onClicked.addListener(function (tab) {
     getAllAlarms(); // print console all current alarms
@@ -111,13 +141,15 @@ function closeTabOnAlarm(stringId) {
     var intTabId = parseInt(stringId);
 
     // create object to be store and store the closing tab info
-    var storeVal = {};
+    var tabInfo = {
+        tabId: intTabId
+    };
     chrome.tabs.get(intTabId, function (tab){
-        storeVal.url = tab.url;
-        storeVal.title = tab.title;
-        storeVal.favIconUrl = tab.favIconUrl;
-        storeVal.index = tab.index;
-        storeObject(intTabId, storeVal);
+        tabInfo.tabUrl = tab.url;
+        tabInfo.tabTitle = tab.title;
+        tabInfo.tabFavIconUrl = tab.favIconUrl;
+        tabInfo.tabIndex = tab.index;
+        storeObject(tabInfo);
     });
 
     chrome.tabs.remove(intTabId, function(){
@@ -154,16 +186,18 @@ function clearAllAlarms(){
     });
 }
 
-function storeObject(key, value) { // key is intTabId
-    var storeObj = {};
-    storeObj[key] = value;
-    storeObj.action = 'store';
-    console.log('the storeObj is:');
-    console.log(storeObj);
+function storeObject(tabInfo) { // key is intTabId
+    // var storeObj = {};
+    // storeObj[key] = value;
+    // storeObj.action = 'store';
+    console.log('Storing tabInfo:');
+    console.log(tabInfo);
 
-    chrome.runtime.sendMessage(key, storeObj, function(response) {
-        console.log(response.farewell);
-    });
+    closedTabsHistoryData.push(tabInfo);
+
+    // chrome.runtime.sendMessage(key, storeObj, function(response) {
+    //     console.log(response.farewell);
+    // });
 
     // console.log('Successfully Stored object with key: ' + key);
     // chrome.storage.sync.set(storeObj, function() {
