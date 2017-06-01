@@ -45,23 +45,23 @@ chrome.tabs.onCreated.addListener(function(tab) {
 });
 
 // Use onUpdated along with onCreated event to detect switching tab
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatedTab) {
-    chrome.tabs.query({'active': true}, function (activeTabs) {
-        var activeTab = activeTabs[0];
-        console.log('activeTab is: ');
-        console.log(activeTab.url);
-
-        // When auto-closed-history tab is open --> send data to display
-        // When auto-closed-history tab is closed --> we just have to keep track of closed-tabs data in the backgroundjs
-        if (changeInfo.url && changeInfo.url.indexOf('auto-closed-history.html') > -1) {
-            console.log('History page is open');
-            // send closed-tabs-history data to auto-closed-history page
-
-        } else {
-            console.log('Tab changed, but not to History page');
-        }
-    });
-});
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatedTab) {
+//     chrome.tabs.query({'active': true}, function (activeTabs) {
+//         var activeTab = activeTabs[0];
+//         console.log('activeTab is: ');
+//         console.log(activeTab.url);
+//
+//         // When auto-closed-history tab is open --> send data to display
+//         // When auto-closed-history tab is closed --> we just have to keep track of closed-tabs data in the backgroundjs
+//         if (changeInfo.url && changeInfo.url.indexOf('auto-closed-history.html') > -1) {
+//             console.log('History page is open');
+//             // send closed-tabs-history data to auto-closed-history page
+//
+//         } else {
+//             console.log('Tab changed, but not to History page');
+//         }
+//     });
+// });
 
 // handle init data request to auto-closed-history page
 chrome.runtime.onMessage.addListener(
@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener(
         console.log(sender.tab ?
                   "from a content script:" + sender.tab.url :
                   "from the extension");
-      if (request.action == 'getInitData')
+      if (request.action === 'getInitData')
           sendResponse({data: closedTabsHistoryData});
 });
 
@@ -194,6 +194,8 @@ function storeObject(tabInfo) { // key is intTabId
     console.log(tabInfo);
 
     closedTabsHistoryData.push(tabInfo);
+    // After updating data --> send updated data to auto-closed-history page
+    sendUpdatedDataIfHistoryPageIsOpen();
 
     // chrome.runtime.sendMessage(key, storeObj, function(response) {
     //     console.log(response.farewell);
@@ -208,6 +210,29 @@ function storeObject(tabInfo) { // key is intTabId
     //     }
     // });
 }
+
+/*
+  Send updated data to history page when:
+  1) History page is first open or viewed (taken care of by getting messaged from auto-closed-history page)
+  2) History page has been open and being viewed and a tab is being closed automatically
+
+*/
+function sendUpdatedDataIfHistoryPageIsOpen(){
+    chrome.tabs.query({}, function (activeTabs) { // get all tabs
+        for (var tab in activeTabs){
+            if (activeTabs[tab].url.indexOf('auto-closed-history.html') > -1){
+                // auto-closed-history is open --> send updated data
+                chrome.runtime.sendMessage({action: 'sendUpdatedDataFromBg', updatedData: closedTabsHistoryData}, function(response) {
+                    console.log(response.recieveStatus);
+                });
+                break;
+            }
+        }
+        // if auto-closed-history is not open --> do nothing
+        console.log('Stored a closed tab, but not sending updated data because historyPage is closed');
+    });
+}
+
 
 function init() {
     // count tabs

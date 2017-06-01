@@ -32,35 +32,45 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
         //         });
         // }
 
-        // update if the page is open
-        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-                // sender is tab object and has all tab info
-                console.log(sender.tab ?
-                          "from a content script:" + sender.tab.url :
-                          "from the extension");
-                var tabInfo = {
-                    tabId: sender.tab.id,
-                    tabUrl: sender.tab.url,
-                    tabTitle: sender.tab.title,
-                    tabFavIconUrl: sender.tab.favIconUrl,
-                    tabIndex: sender.tab.index
-                };
-
-                // avoid storing empty url and new tab pages in the history
-                if (tabInfo.tabUrl && tabInfo.tabUrl.indexOf('chrome://') !== 0){
-                    $scope.gridOptions.data.push(tabInfo);
-                }
-                console.log('$scope.gridOptions.data: ');
-                console.log($scope.gridOptions.data);
-                $scope.$apply();
-
-                console.log('The message sent is:');
-                console.log(request);
-                if (request.action == "store"){
-                    sendResponse({farewell: "goodbye"});
-                }
-                return true; // indicate sending a response asynchronously
+        // on recieve updated data
+        chrome.runtime.onMessage.addListener(
+            function(request, sender, sendResponse) {
+              if (request.action === 'sendUpdatedDataFromBg'){
+                  $scope.gridOptions.data = request.updatedData;
+                  $scope.$apply(); // update ui
+                  sendResponse({recieveStatus: 'Successfully recieved data from backgroundjs'});
+              }
         });
+
+        // update if the page is open
+        // chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        //         // sender is tab object and has all tab info
+        //         console.log(sender.tab ?
+        //                   "from a content script:" + sender.tab.url :
+        //                   "from the extension");
+        //         var tabInfo = {
+        //             tabId: sender.tab.id,
+        //             tabUrl: sender.tab.url,
+        //             tabTitle: sender.tab.title,
+        //             tabFavIconUrl: sender.tab.favIconUrl,
+        //             tabIndex: sender.tab.index
+        //         };
+        //
+        //         // avoid storing empty url and new tab pages in the history
+        //         if (tabInfo.tabUrl && tabInfo.tabUrl.indexOf('chrome://') !== 0){
+        //             $scope.gridOptions.data.push(tabInfo);
+        //         }
+        //         console.log('$scope.gridOptions.data: ');
+        //         console.log($scope.gridOptions.data);
+        //         $scope.$apply();
+        //
+        //         console.log('The message sent is:');
+        //         console.log(request);
+        //         if (request.action == "store"){
+        //             sendResponse({farewell: "goodbye"});
+        //         }
+        //         return true; // indicate sending a response asynchronously
+        // });
 
         // $scope.$watch('$scope.gridOptions.data', function(){
         //     console.log('grid option data changed!');
