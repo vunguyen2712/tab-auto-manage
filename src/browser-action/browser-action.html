@@ -1,24 +1,56 @@
-<!doctype html>
-<style type="text/css">
-	#mainPopup {
-		padding: 10px;
-		height: 200px;
-		width: 400px;
-		font-family: Helvetica, Ubuntu, Arial, sans-serif;
-	}
-	h1 {
-		font-size: 2em;
-	}
-</style>
+<!DOCTYPE html>
+<html>
 
-<script src="browser-action.js"></script>
+		<head>
+		  <!-- Angular Material style sheet -->
+			<!-- <link rel="stylesheet" href="../../../angular-lib/angular-material/angular-material.css"> -->
+			<link rel="stylesheet" href="browser-action.css">
+		</head>
 
-<div id="mainPopup">
-	<div class="content">
-		<input type="range" min="1" max="100" value="20" data-rangeslider>
-	</div>
-<h1>Hello extension popup!</h1>
-<a href="../options-custom/index.html" target="_blank">Options</a>
-<a href="../extension-page/auto-closed-history.html" target="_blank">history page</a>
-<p>To shut this popup down, edit the manifest file and remove the "default popup" key. To edit it, just edit ext/browser_action/browser_action.html. The CSS is there, too.</p>
-</div>
+		<style type="text/css">
+			#mainPopup {
+				padding: 10px;
+				height: 200px;
+				width: 400px;
+				font-family: Helvetica, Ubuntu, Arial, sans-serif;
+			}
+			h1 {
+				font-size: 2em;
+			}
+		</style>
+
+		<!-- <body style="min-width:600px;"> -->
+		<body>
+				<div id="mainPopup">
+						<!-- Min number of tabs user wants to keep -->
+						<a href="../extension-page/auto-closed-history.html" target="_blank">History page</a>
+						<h1>Min number of tabs:</h1>
+						<div class="range-slider">
+								<input id="min-num-tab-slider" class="range-slider__range" type="range" value="5" min="0" max="20">
+								<span id="min-num-tab-slider-span" class="range-slider__value">0</span>
+						</div>
+
+						<!-- How long inactive tabs can stay open in minutes-->
+						<h1>Close Inactive Tab in:</h1>
+						<div class="range-slider">
+								<input id="minutes-to-close-inactive-tabs-slider" class="range-slider__range" type="range" value="10" min="0" max="30">
+								<span id="minutes-to-close-inactive-tabs-slider-span" class="range-slider__value">0</span>
+						</div>
+				</div>
+
+				<!-- Angular Material requires Angular.js Libraries -->
+				<!-- <script src="../../../angular-lib/angular/angular.min.js"></script>
+				<script src="../../../angular-lib/angular-animate/angular-animate.min.js"></script>
+				<script src="../../../angular-lib/angular-aria/angular-aria.min.js"></script>
+				<script src="../../../angular-lib/angular-messages/angular-messages.min.js"></script>
+				<script src="../../../angular-lib/angular-material/angular-material.min.js"></script> -->
+
+
+			  <!-- Angular Material Library -->
+				<!-- <script src="../../../angular-lib/angular-material/angular-material.min.js"></script> -->
+
+				<script src="../js-lib/jquery-3.2.1.min.js"></script>
+				<script src="browser-action.js"></script>
+		</body>
+
+</html>

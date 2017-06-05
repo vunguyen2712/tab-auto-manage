@@ -17,9 +17,9 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
 
         $scope.gridActions = {};
 
-        chrome.storage.sync.clear(function (callback){
-            console.log('Clearing old sync data');
-        });
+        // chrome.storage.sync.clear(function (callback){
+        //     console.log('Clearing old sync data');
+        // });
         // myAppFactory.getData().then(function (responseData) {
         //     $scope.gridOptions.data = responseData.data;
         // });

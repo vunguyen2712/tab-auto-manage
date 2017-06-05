@@ -1,30 +1,9 @@
 'use strict';
-// if you checked "fancy-settings" in extensionizr.com, uncomment this lines
-
-// var settings = new Store("settings", {
-//     "sample_setting": "This is how you use Store.js to remember values"
-// });
-//
-//
-// //example of using a message handler from the inject scripts
-// chrome.extension.onMessage.addListener(
-//   function(request, sender, sendResponse) {
-//   	chrome.pageAction.show(sender.tab.id);
-//     sendResponse();
-// });
-//
-// chrome.tabs.getSelected(null, function(tab) {
-//     var tab = tab.id;
-//     tabUrl = tab.url;
-//     alert(tab.url);
-// });
-//
-
 /*
   -- Extension setting --
 */
-var timeToKeepInMinutes = 1/6; // double
-var minTabsKept = 12; // min number of tabs user want to keep
+var timeToKeepInMinutes = 1; // double
+var minTabsKept = 20; // min number of tabs user want to keep
 
 var currentTabIdStr = "";
 var totalOpenTabs = 0;
@@ -38,30 +17,12 @@ var closedTabsHistoryData = [];
 
 chrome.tabs.onCreated.addListener(function(tab) {
     ++totalOpenTabs;
+    console.log('totalOpenTabs = ' + totalOpenTabs);
     var tabId = tab.id;
     var tabUrl = tab.url;
     var alarmName = tabId.toString();
     // console.log("just created. Tab id: " + tabId);
 });
-
-// Use onUpdated along with onCreated event to detect switching tab
-// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatedTab) {
-//     chrome.tabs.query({'active': true}, function (activeTabs) {
-//         var activeTab = activeTabs[0];
-//         console.log('activeTab is: ');
-//         console.log(activeTab.url);
-//
-//         // When auto-closed-history tab is open --> send data to display
-//         // When auto-closed-history tab is closed --> we just have to keep track of closed-tabs data in the backgroundjs
-//         if (changeInfo.url && changeInfo.url.indexOf('auto-closed-history.html') > -1) {
-//             console.log('History page is open');
-//             // send closed-tabs-history data to auto-closed-history page
-//
-//         } else {
-//             console.log('Tab changed, but not to History page');
-//         }
-//     });
-// });
 
 // handle init data request to auto-closed-history page
 chrome.runtime.onMessage.addListener(
@@ -73,8 +34,35 @@ chrome.runtime.onMessage.addListener(
           sendResponse({data: closedTabsHistoryData});
 });
 
+// Connection with popup for data sending
+chrome.extension.onConnect.addListener(function(port) {
+      console.log("Connected .....");
+      port.onMessage.addListener(function(msg) {
+           if(msg.action === 'initPopUp'){
+              var dataSentToPopUp = {
+                  action: 'sendInitDataFromBgToPopup',
+                  tabsKept : minTabsKept,
+                  closeInactiveTabsByMin : timeToKeepInMinutes
+              };
+              port.postMessage(dataSentToPopUp);
+
+           } else if (msg.action === 'sendUpdatedSettingData'){
+              timeToKeepInMinutes = parseInt(msg.keepInactiveTabsForMinutes); // convert o sec by /60
+              minTabsKept = parseInt(msg.minTabsKept);
+              if (totalOpenTabs <= minTabsKept) {
+                  console.log("Having minTabsKept of tabs or less. Thus, clearing all alarms");
+                  if(totalActiveAlarms > 0) {
+                      clearAllAlarms();
+                  }
+              }
+              port.postMessage({action: 'Recieved updated data from Popup'});
+           }
+      });
+ })
+
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
     --totalOpenTabs;
+    console.log('totalOpenTabs = ' + totalOpenTabs);
 
     // if totalOpenTabs <= minTabsKept remove all alarms to keep all current tabs
     if (totalOpenTabs <= minTabsKept) {
