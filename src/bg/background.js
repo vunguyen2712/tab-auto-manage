@@ -2,8 +2,8 @@
 /*
   -- Extension setting --
 */
-var timeToKeepInMinutes = 1; // double
-var minTabsKept = 20; // min number of tabs user want to keep
+var timeToKeepInMinutes = 10/60; // double
+var minTabsKept = 14; // min number of tabs user want to keep
 
 var currentTabIdStr = "";
 var totalOpenTabs = 0;
@@ -96,31 +96,11 @@ chrome.tabs.onActivated.addListener(function (activeInfoObj) {
     currentTabIdStr = tabIdStr;
 });
 
-// Listen when switching to a new tab
-// chrome.tabs.onHighlighted.addListener(function (highlightInfo) {
-//     // Create an alarm for the previously active tab to CLOSE tab at timeToKeepInMinutes
-//     if (currentTabIdStr && totalOpenTabs > minTabsKept){
-//         chrome.alarms.create(currentTabIdStr, {delayInMinutes: timeToKeepInMinutes});
-//         ++totalActiveAlarms;
-//         console.log("Created alarm for " + currentTabIdStr);
-//     }
-//     // clear the alarm for the active tab to KEEP it OPEN
-//     var tabIdStr = highlightInfo.tabIds[0].toString();  // alarmName (string) is same as tabId (int) but diff types
-//     if (totalActiveAlarms > 0) {
-//         clearAlarm(tabIdStr);
-//     }
-//     // Make currentTab become previous active tab var
-//     currentTabIdStr = tabIdStr;
-// });
-
 chrome.browserAction.onClicked.addListener(function (tab) {
     getAllAlarms(); // print console all current alarms
-    // alert("Hey !!! You have clicked");
 });
 
-
 init();
-
 
 /*
   --- Helper functions
@@ -137,6 +117,7 @@ function closeTabOnAlarm(stringId) {
         tabInfo.tabTitle = tab.title;
         tabInfo.tabFavIconUrl = tab.favIconUrl;
         tabInfo.tabIndex = tab.index;
+        tabInfo.tabTimeStampStr = formatDateTimeAMPM(new Date());
         storeObject(tabInfo);
     });
 
@@ -175,28 +156,12 @@ function clearAllAlarms(){
 }
 
 function storeObject(tabInfo) { // key is intTabId
-    // var storeObj = {};
-    // storeObj[key] = value;
-    // storeObj.action = 'store';
     console.log('Storing tabInfo:');
     console.log(tabInfo);
 
     closedTabsHistoryData.push(tabInfo);
     // After updating data --> send updated data to auto-closed-history page
     sendUpdatedDataIfHistoryPageIsOpen();
-
-    // chrome.runtime.sendMessage(key, storeObj, function(response) {
-    //     console.log(response.farewell);
-    // });
-
-    // console.log('Successfully Stored object with key: ' + key);
-    // chrome.storage.sync.set(storeObj, function() {
-    //     if (chrome.runtime.error) {
-    //         console.log("Runtime error.");
-    //     } else {
-    //
-    //     }
-    // });
 }
 
 /*
@@ -219,6 +184,27 @@ function sendUpdatedDataIfHistoryPageIsOpen(){
         // if auto-closed-history is not open --> do nothing
         console.log('Stored a closed tab, but not sending updated data because historyPage is closed');
     });
+}
+
+/*
+  Formating date time
+*/
+function addZero(num) {
+    return (num >= 0 && num < 10) ? '0' + num : num + '';
+}
+
+// return String dateTime
+function formatDateTimeAMPM(date) {
+  var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var dayInWeek = weekday[date.getDay()];
+  var dateSeparator = '/';
+  var hour = date.getHours() - (date.getHours() >= 12 ? 12 : 0);
+  var period = date.getHours() >= 12 ? 'PM' : 'AM';
+
+  var strDateTime = dayInWeek + ' ' + addZero(date.getDate()) + dateSeparator + addZero(date.getMonth() + 1) + dateSeparator + date.getFullYear()
+                  + ' ' + addZero(hour) + ':' + addZero(date.getMinutes()) + ' ' + period;
+
+  return strDateTime;
 }
 
 
