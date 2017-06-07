@@ -45,10 +45,4 @@ var rangeSlider = function(){
   });
 };
 
-// helper function
-// function setSettingValues(settingData){
-//     $('#min-num-tab-slider').val(settingData.);
-//     $('#minutes-to-close-inactive-tabs-slider').val();
-// }
-
 rangeSlider();

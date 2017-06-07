@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener(
           sendResponse({data: closedTabsHistoryData});
 });
 
-// Connection with popup for data sending
+// Connection with popUpjs for data sending
 chrome.extension.onConnect.addListener(function(port) {
       console.log("Connected .....");
       port.onMessage.addListener(function(msg) {
