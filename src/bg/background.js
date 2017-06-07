@@ -195,14 +195,15 @@ function addZero(num) {
 
 // return String dateTime
 function formatDateTimeAMPM(date) {
-  var weekday = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var dayInWeek = weekday[date.getDay()];
   var dateSeparator = '/';
-  var hour = date.getHours() - (date.getHours() >= 12 ? 12 : 0);
-  var period = date.getHours() >= 12 ? 'PM' : 'AM';
+  var dateHour = date.getHours();
+  var hour = (dateHour !== 0 ? dateHour : 12) - (dateHour > 12 ? 12 : 0);
+  var period = dateHour >= 12 ? 'PM' : 'AM';
 
   var strDateTime = dayInWeek + ' ' + addZero(date.getDate()) + dateSeparator + addZero(date.getMonth() + 1) + dateSeparator + date.getFullYear()
-                  + ' ' + addZero(hour) + ':' + addZero(date.getMinutes()) + ' ' + period;
+                  + ' ' + hour + ':' + addZero(date.getMinutes()) + ' ' + period;
 
   return strDateTime;
 }
