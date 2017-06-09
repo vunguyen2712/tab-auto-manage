@@ -118,6 +118,7 @@ function closeTabOnAlarm(stringId) {
         tabInfo.tabFavIconUrl = tab.favIconUrl;
         tabInfo.tabIndex = tab.index;
         tabInfo.tabTimeStampStr = formatDateTimeAMPM(new Date());
+        tabInfo.tabDomain = extractHostname(tab.url);
         storeObject(tabInfo);
     });
 
@@ -208,6 +209,30 @@ function formatDateTimeAMPM(date) {
   return strDateTime;
 }
 
+/*
+    Extract hostname of an url
+*/
+function extractHostname(url) {
+    if (!url)
+        return;
+    var hostname;
+    //find & remove protocol (http, ftp, etc.) and get hostname
+    if (url.indexOf("://") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    }
+    // remove 'www.'
+    if (url.indexOf('www.') > -1) {
+    	hostname = hostname.split('www.')[1];
+    }
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+    return hostname;
+}
 
 function init() {
     // count tabs

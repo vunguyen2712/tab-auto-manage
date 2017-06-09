@@ -62,6 +62,9 @@
                               <th sortable="tabUrl" class="sortable mdl-data-table__cell--non-numeric">
                                   <span>Web Title</span>
                               </th>
+                              <th sortable="tabDomain" class="sortable mdl-data-table__cell--non-numeric">
+                                  <span>Domain</span>
+                              </th>
                               <th sortable="tabTimeStampStr" class="sortable">
                                   <span>Date Time Closed</span>
                               </th>
@@ -72,6 +75,9 @@
                               <td id="title-and-domain" class="mdl-data-table__cell--non-numeric">
                                   <div class="website-icon" id="icon" style="background-image: url({{item.tabFavIconUrl}})"></div>
                                   <a href="{{item.tabUrl}}"><div ng-bind="item.tabTitle"></div></a>
+                              </td>
+                              <td id="domain" class="mdl-data-table__cell--non-numeric">
+                                  <div ng-bind="item.tabDomain"></div>
                               </td>
                               <td ng-bind="item.tabTimeStampStr | date:'MM/dd/yyyy'"></td>
                           </tr>
