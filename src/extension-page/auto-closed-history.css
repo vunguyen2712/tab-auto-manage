@@ -109,8 +109,6 @@ ul.pagination {
 
 #title-and-domain {
   align-items: center;
-  /*display: flex;
-  flex: 1; this causes extra under line*/
   overflow: hidden;
 }
 .website-icon {

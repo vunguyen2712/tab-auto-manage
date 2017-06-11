@@ -5,15 +5,26 @@ var portToBg = chrome.extension.connect({
 var initMessage = {
     action: 'initPopUp'
 };
+
+var slider = $('.range-slider'),
+    range = $('.range-slider__range'),
+    value = $('.range-slider__value'),
+    minNumTabSlider = $('#min-num-tab-slider'),
+    minutesSlider = $('#minutes-to-close-inactive-tabs-slider'),
+    tabSliderSpan = $('#min-num-tab-slider-span'),
+    minutesSliderSpan = $('#minutes-to-close-inactive-tabs-slider-span');
+
 portToBg.postMessage(initMessage); // send to bg
 
 portToBg.onMessage.addListener(function(msg) {
     // update popUp ui
     if(msg.action === 'sendInitDataFromBgToPopup'){
-        $('#min-num-tab-slider').val(msg.tabsKept);
-        $('#min-num-tab-slider-span').html(msg.tabsKept);
-        $('#minutes-to-close-inactive-tabs-slider').val(msg.closeInactiveTabsByMin);
-        $('#minutes-to-close-inactive-tabs-slider-span').html(msg.closeInactiveTabsByMin);
+        minNumTabSlider.val(msg.tabsKept);
+        tabSliderSpan.html(msg.tabsKept + ' tabs');
+        // tabSliderSpan.append(' tabs');
+        minutesSlider.val(msg.closeInactiveTabsByMin);
+        minutesSliderSpan.html(msg.closeInactiveTabsByMin + ' minutes');
+        // minutesSliderSpan.append(' minutes');
         console.log(msg);
     } else if (msg.action === 'Recieved updated data from Popup'){
         console.log('BG successfully recieved updated data from popUp');
@@ -21,27 +32,24 @@ portToBg.onMessage.addListener(function(msg) {
 });
 
 var rangeSlider = function(){
-  var slider = $('.range-slider'),
-      range = $('.range-slider__range'),
-      value = $('.range-slider__value');
-
   range.on('input', function(){
       $(this).next(value).html(this.value);
+      tabSliderSpan.html(minNumTabSlider.val() + ' tabs');
+      minutesSliderSpan.html(minutesSlider.val() + ' minutes');
       var settingData = {
           action: 'sendUpdatedSettingData',
-          minTabsKept : $('#min-num-tab-slider').val(),
-          keepInactiveTabsForMinutes : $('#minutes-to-close-inactive-tabs-slider').val()
+          minTabsKept : minNumTabSlider.val(),
+          keepInactiveTabsForMinutes : minutesSlider.val()
       }
       // Send updated Data to bg
       portToBg.postMessage(settingData); // send to bg
   });
 
   slider.each(function(){
-
-    value.each(function(){
-        var value = $(this).prev().attr('value');
-        $(this).html(value);
-    });
+      value.each(function(){
+          var value = $(this).prev().attr('value');
+          $(this).html(value);
+      });
   });
 };
 
