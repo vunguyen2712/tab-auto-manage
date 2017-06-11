@@ -25,9 +25,7 @@ portToBg.onMessage.addListener(function(msg) {
         tabNum.html(msg.tabsKept);
         minutesSlider.val(msg.closeInactiveTabsByMin);
         minutesSliderSpan.html(msg.closeInactiveTabsByMin + ' minutes');
-        console.log(msg);
     } else if (msg.action === 'Recieved updated data from Popup'){
-        console.log('BG successfully recieved updated data from popUp');
     }
 });
 
