@@ -3,7 +3,7 @@
   -- Extension setting --
 */
 var timeToKeepInMinutes = 10/60; // double
-var minTabsKept = 14; // min number of tabs user want to keep
+var minTabsKept = 10; // min number of tabs user want to keep
 
 var currentTabIdStr = "";
 var totalOpenTabs = 0;

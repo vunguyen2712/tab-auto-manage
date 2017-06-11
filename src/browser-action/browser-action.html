@@ -9,22 +9,23 @@
 		<body>
 				<header class="app-bar promote-layer paper-toolbar paper-shadow">
 						<div class="app-bar-container paper-toolbar">
-							<h1 class="header-logo">Auto Tab Manager</h1>
+							<h1 class="header-logo">Smarter Tab Setting</h1>
 						</div>
 				</header>
 
 				<div id="mainPopup">
 						<!-- Do not automatically close a tab when having this amount of tabs left -->
-						<a href="../extension-page/auto-closed-history.html" target="_blank">History page</a>
-						<h3>Do not automatically close a tab when having:</h3>
+						<a href="../extension-page/auto-closed-history.html" target="_blank">Go to History page</a>
+
+						<h3>Automatically close inactive tab when having <span id="tab-num"></span> tabs or more:</h3>
 						<div class="range-slider">
 								<input id="min-num-tab-slider" class="range-slider__range" type="range" value="5" min="0" max="20">
 								<span id="min-num-tab-slider-span" class="range-slider__value">0</span>
 
 						</div>
 
-						<!-- How long inactive tabs can stay open in minutes -->
-						<h3>Inactive tabs will be closed in: </h3>
+						<!-- How long inactive tabs can stay open in minutes-->
+						<h3>Inactive tabs will be closed in:</h3>
 						<div class="range-slider">
 								<input id="minutes-to-close-inactive-tabs-slider" class="range-slider__range" type="range" value="10" min="0" max="30">
 								<span id="minutes-to-close-inactive-tabs-slider-span" class="range-slider__value">0</span>

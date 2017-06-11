@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Auto Closed History Page</title>
+    <title>Smart Tab | History Page</title>
     <link rel="stylesheet" href="../angular-lib/angular-material/angular-material.css">
     <link rel="stylesheet" href="../angular-lib/angular-material/material.indigo-blue.min.css">
     <link rel="stylesheet" href="auto-closed-history.css">
@@ -10,7 +10,7 @@
 <body ng-app="myApp" ng-controller="myAppController" ng-cloak>
 	<md-toolbar layout="row" layout-align="center">
       <div class="md-toolbar-tools" flex-gt-md="60" flex-md="80" flex-sm="100">
-          <span>Automatically Closed Tabs History</span>
+          <span>Smart Tab - History</span>
           <span flex></span>
       </div>
   </md-toolbar>
@@ -31,10 +31,10 @@
 
           <div grid-data grid-options="gridOptions" grid-actions="gridActions">
               <div layout-gt-sm="row" layout-sm="column" layout-align="center">
-                  <div flex-gt-sm="25" flex-sm="100" layout="row" layout-align="start center">
-                      <span>{{filtered.length}} items total</span>
+                  <div flex-gt-sm="80" flex-md="100" layout="row" layout-align="start center">
+                      <span>{{filtered.length}} tabs have been automatically closed</span>
                   </div>
-                  <div flex-gt-sm="75" flex-xs="100">
+                  <div flex-gt-sm="20" flex-md="100">
                       <div layout-xs="column" layout="row" layout-align-xs="end end" layout-align="end center">
                           <grid-pagination max-size="5"
                                            boundary-links="true"
