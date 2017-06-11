@@ -2,7 +2,7 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
     .controller('myAppController', ['$scope', 'myAppFactory', function ($scope, myAppFactory) {
 
         $scope.autoClosedHistory = [];
-        $scope.gridOptions = {
+        $scope.gridOptions = { // gridOptions data must be defined at least
             data: [],
             urlSync: false
         };
