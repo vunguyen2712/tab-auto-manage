@@ -9,6 +9,7 @@ var initMessage = {
 var slider = $('.range-slider'),
     range = $('.range-slider__range'),
     value = $('.range-slider__value'),
+    tabNum = $('#tab-num'),
     minNumTabSlider = $('#min-num-tab-slider'),
     minutesSlider = $('#minutes-to-close-inactive-tabs-slider'),
     tabSliderSpan = $('#min-num-tab-slider-span'),
@@ -21,10 +22,9 @@ portToBg.onMessage.addListener(function(msg) {
     if(msg.action === 'sendInitDataFromBgToPopup'){
         minNumTabSlider.val(msg.tabsKept);
         tabSliderSpan.html(msg.tabsKept + ' tabs');
-        // tabSliderSpan.append(' tabs');
+        tabNum.html(msg.tabsKept);
         minutesSlider.val(msg.closeInactiveTabsByMin);
         minutesSliderSpan.html(msg.closeInactiveTabsByMin + ' minutes');
-        // minutesSliderSpan.append(' minutes');
         console.log(msg);
     } else if (msg.action === 'Recieved updated data from Popup'){
         console.log('BG successfully recieved updated data from popUp');
@@ -34,6 +34,7 @@ portToBg.onMessage.addListener(function(msg) {
 var rangeSlider = function(){
   range.on('input', function(){
       $(this).next(value).html(this.value);
+      tabNum.html(minNumTabSlider.val());
       tabSliderSpan.html(minNumTabSlider.val() + ' tabs');
       minutesSliderSpan.html(minutesSlider.val() + ' minutes');
       var settingData = {

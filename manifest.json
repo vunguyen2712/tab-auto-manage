@@ -1,8 +1,8 @@
 {
-  "name": "Tabs Auto Manager",
-  "version": "0.0.1",
+  "name": "Smarter Tab",
+  "version": "0.1.0",
   "manifest_version": 2,
-  "description": "Manage your tab automatically",
+  "description": "Smarter Tab will close your inactive tabs automatically for you, free your computer's memory",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -16,7 +16,7 @@
   "options_page": "src/extension-page/auto-closed-history.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",
-    "default_title": "Auto Tab Manager",
+    "default_title": "Smarter Tab",
     "default_popup": "src/browser-action/browser-action.html"
   },
   "permissions": [
