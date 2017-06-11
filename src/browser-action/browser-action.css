@@ -14,7 +14,7 @@ h1 {
 
 body {
   font-family: sans-serif;
-  padding: 60px 20px;
+  padding: 60px 5px 5px;
 }
 @media (min-width: 600px) {
   body {
@@ -32,7 +32,7 @@ body {
 
 .range-slider__range {
   -webkit-appearance: none;
-  width: calc(100% - (73px));
+  width: calc(100% - (95px));
   height: 10px;
   border-radius: 5px;
   background: #d7dcdf;
@@ -77,7 +77,7 @@ body {
 .range-slider__value {
   display: inline-block;
   position: relative;
-  width: 60px;
+  width: 80px;
   color: #fff;
   line-height: 20px;
   text-align: center;

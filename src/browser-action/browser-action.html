@@ -2,12 +2,10 @@
 <html>
 
 		<head>
-		  <!-- Angular Material style sheet -->
-			<!-- <link rel="stylesheet" href="../../../angular-lib/angular-material/angular-material.css"> -->
 			<link rel="stylesheet" href="browser-action.css">
 		</head>
 
-		<!-- <body style="min-width:600px;"> -->
+		<!-- <body style="min-width:600px;"> Use this to set min width for popUp-->
 		<body>
 				<header class="app-bar promote-layer paper-toolbar paper-shadow">
 						<div class="app-bar-container paper-toolbar">
@@ -16,16 +14,17 @@
 				</header>
 
 				<div id="mainPopup">
-						<!-- Min number of tabs user wants to keep -->
+						<!-- Do not automatically close a tab when having this amount of tabs left -->
 						<a href="../extension-page/auto-closed-history.html" target="_blank">History page</a>
-						<h2>Number of tabs you want to keep:</h2>
+						<h3>Do not automatically close a tab when having:</h3>
 						<div class="range-slider">
 								<input id="min-num-tab-slider" class="range-slider__range" type="range" value="5" min="0" max="20">
 								<span id="min-num-tab-slider-span" class="range-slider__value">0</span>
+
 						</div>
 
-						<!-- How long inactive tabs can stay open in minutes-->
-						<h2>Automatically close tabs after being inactive for (minutes):</h2>
+						<!-- How long inactive tabs can stay open in minutes -->
+						<h3>Inactive tabs will be closed in: </h3>
 						<div class="range-slider">
 								<input id="minutes-to-close-inactive-tabs-slider" class="range-slider__range" type="range" value="10" min="0" max="30">
 								<span id="minutes-to-close-inactive-tabs-slider-span" class="range-slider__value">0</span>

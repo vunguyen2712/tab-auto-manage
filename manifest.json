@@ -1,21 +1,19 @@
 {
-  "name": "tabAutoManage",
+  "name": "Tabs Auto Manager",
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Manage your tab automatically",
-  "homepage_url": "http://vunguyensoftwaredeveloper.com",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "default_locale": "en",
   "background": {
     "scripts": ["./src/js-lib/jquery-3.2.1.min.js", "./src/bg/background.js"],
     "persistent": false
   },
-  "options_page": "src/options-custom/index.html",
+  "options_page": "src/extension-page/auto-closed-history.html",
   "browser_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "Auto Tab Manager",
