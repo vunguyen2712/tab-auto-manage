@@ -22,12 +22,9 @@ angular.module('myApp', ['dataGrid', 'pagination', 'ngMaterial'])
         function init(){
             // get the entire contents of storage.
             chrome.storage.sync.get(null, function (items) {
-                console.log('contents of storage:');
-                console.log(items);
             });
 
             chrome.runtime.sendMessage({action: 'getInitData'}, function(response) {
-                console.log(response.data);
                 $scope.gridOptions.data = response.data;
                 $scope.$apply(); // update ui
             });

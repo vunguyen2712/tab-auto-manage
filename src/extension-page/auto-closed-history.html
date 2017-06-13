@@ -10,7 +10,7 @@
 <body ng-app="myApp" ng-controller="myAppController" ng-cloak>
 	<md-toolbar layout="row" layout-align="center">
       <div class="md-toolbar-tools" flex-gt-md="60" flex-md="80" flex-sm="100">
-          <span>Smart Tab - History</span>
+          <span>Smarter Tab - History</span>
           <span flex></span>
       </div>
   </md-toolbar>
@@ -31,10 +31,10 @@
 
           <div grid-data grid-options="gridOptions" grid-actions="gridActions">
               <div layout-gt-sm="row" layout-sm="column" layout-align="center">
-                  <div flex-gt-sm="80" flex-md="100" layout="row" layout-align="start center">
+                  <div flex-gt-sm="30" flex-md="100" layout="row" layout-align="start center">
                       <span>{{filtered.length}} tabs have been automatically closed</span>
                   </div>
-                  <div flex-gt-sm="20" flex-md="100">
+                  <div flex-gt-sm="70" flex-md="100">
                       <div layout-xs="column" layout="row" layout-align-xs="end end" layout-align="end center">
                           <grid-pagination max-size="5"
                                            boundary-links="true"
@@ -59,27 +59,27 @@
                   <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
                       <thead>
                           <tr>
-                              <th sortable="tabUrl" class="sortable mdl-data-table__cell--non-numeric">
+                              <th sortable="tabUrl" class="titleUrl sortable mdl-data-table__cell--non-numeric">
                                   <span>Web Title</span>
                               </th>
-                              <th sortable="tabDomain" class="sortable mdl-data-table__cell--non-numeric">
+                              <th sortable="tabDomain" class="domain sortable mdl-data-table__cell--non-numeric">
                                   <span>Domain</span>
                               </th>
-                              <th sortable="tabTimeStampStr" class="sortable">
+                              <th sortable="tabTimeStampStr" class="dateTime sortable">
                                   <span>Date Time Closed</span>
                               </th>
                           </tr>
                       </thead>
                       <tbody>
                           <tr grid-item ng-if="gridOptions.data">
-                              <td id="title-and-domain" class="mdl-data-table__cell--non-numeric">
+                              <td id="title-and-domain" class="titleUrl mdl-data-table__cell--non-numeric">
                                   <div class="website-icon" id="icon" style="background-image: url({{item.tabFavIconUrl}})"></div>
                                   <a href="{{item.tabUrl}}"><div ng-bind="item.tabTitle"></div></a>
                               </td>
-                              <td id="domain" class="mdl-data-table__cell--non-numeric">
+                              <td id="domain" class="domain mdl-data-table__cell--non-numeric">
                                   <div ng-bind="item.tabDomain"></div>
                               </td>
-                              <td ng-bind="item.tabTimeStampStr | date:'MM/dd/yyyy'"></td>
+                              <td ng-bind="item.tabTimeStampStr | date:'MM/dd/yyyy'" class="dateTime"></td>
                           </tr>
                       </tbody>
                   </table>
