@@ -217,5 +217,3 @@ function init() {
     countOpenTabs();
     // will not set alarms for all tabs on init and start setting alarm for 1 tab when user switches tab
 }
-
-alert("background is running");
