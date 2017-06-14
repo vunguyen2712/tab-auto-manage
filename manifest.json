@@ -1,6 +1,6 @@
 {
   "name": "Smarter Tab",
-  "version": "0.1.0",
+  "version": "0.3.2",
   "manifest_version": 2,
   "description": "Smarter Tab will close your inactive tabs automatically for you, free your computer's memory",
   "icons": {
@@ -10,8 +10,7 @@
     "128": "icons/icon128.png"
   },
   "background": {
-    "scripts": ["./src/js-lib/jquery-3.2.1.min.js", "./src/bg/background.js"],
-    "persistent": false
+    "scripts": ["./src/bg/background.js"]
   },
   "options_page": "src/extension-page/auto-closed-history.html",
   "browser_action": {
