@@ -19,6 +19,14 @@ a:focus {
   transition: none !important;
 }
 
+.titleUrl {
+  white-space: normal;
+}
+
+.domain .dateTime{
+  white-space: nowrap;
+}
+
 th md-select {
   margin: 0; }
 
@@ -108,8 +116,8 @@ ul.pagination {
 
 
 #title-and-domain {
-  align-items: center;
-  overflow: hidden;
+  /*align-items: center;
+  overflow: hidden;*/
 }
 .website-icon {
   -webkit-margin-end: 16px;
