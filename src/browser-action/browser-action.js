@@ -26,8 +26,35 @@ portToBg.onMessage.addListener(function(msg) {
         minutesSlider.val(msg.closeInactiveTabsByMin);
         minutesSliderSpan.html(msg.closeInactiveTabsByMin + ' minutes');
     } else if (msg.action === 'Recieved updated data from Popup'){
-      
+
     }
+});
+
+$('#sort-tabs').click(function(){
+    var sortTabsMessage = {
+        action: 'sortTabs'
+    };
+    portToBg.postMessage(sortTabsMessage); // send to bg
+});
+
+$("#sort-all-tabs-button").click(function(){
+    var sortTabsMessage = {
+        action: 'sortTabs'
+    };
+    portToBg.postMessage(sortTabsMessage); // send to bg
+    $(this).addClass("done");
+    $("#sort-button-text-span").text("Sorted!");
+
+});
+
+// Reset
+$("#sort-all-tabs-button").on('mouseout', function(){
+  	if($(this).hasClass("done")){
+    		setTimeout(function(){
+    			$("#sort-all-tabs-button").removeClass("done");
+    			$("#sort-button-text-span").text("Sort Tabs");
+    		}, 1500);
+  	}
 });
 
 var rangeSlider = function(){

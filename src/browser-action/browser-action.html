@@ -3,6 +3,7 @@
 
 		<head>
 			<link rel="stylesheet" href="browser-action.css">
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		</head>
 
 		<!-- <body style="min-width:600px;"> Use this to set min width for popUp-->
@@ -16,6 +17,21 @@
 				<div id="mainPopup">
 						<!-- Do not automatically close a tab when having this amount of tabs left -->
 						<a href="../extension-page/auto-closed-history.html" target="_blank">Go to History page</a>
+
+						<hr>
+						<h3>Tab tools:</h3>
+						<button id="sort-all-tabs-button">
+							  <div class='icon'>
+								    <i class='fa fa-sort-alpha-asc'></i>
+								    <i class='fa fa-question'></i>
+								    <i class='fa fa-check'></i>
+							  </div>
+							  <div class='sort-button-text'>
+							    	<span id="sort-button-text-span">Sort All Tabs</span>
+							  </div>
+						</button>
+
+						<hr>
 
 						<h3>Automatically close inactive tab when having <span id="tab-num"></span> tabs or more:</h3>
 						<div class="range-slider">
