@@ -1,6 +1,6 @@
 {
   "name": "Smarter Tab",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "manifest_version": 2,
   "description": "Smarter Tab will close your inactive tabs automatically for you, free your computer's memory",
   "icons": {

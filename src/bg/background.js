@@ -45,6 +45,9 @@ chrome.extension.onConnect.addListener(function(port) {
                   }
               }
               port.postMessage({action: 'Recieved updated data from Popup'});
+
+           } else if (msg.action === 'sortTabs'){
+              sortTabsUI();
            }
       });
  })
@@ -79,10 +82,6 @@ chrome.tabs.onActivated.addListener(function (activeInfoObj) {
     // Make currentTab become previous active tab var
     currentTabIdStr = tabIdStr;
 });
-
-// chrome.browserAction.onClicked.addListener(function (tab) {
-//     getAllAlarms(); // print console all current alarms
-// });
 
 init();
 
@@ -124,13 +123,6 @@ function countOpenTabs() {
         }
     });
 }
-
-// function getAllAlarms() { // for debugging
-//     chrome.alarms.getAll(function (alarms){
-//         var alarmListStr = alarms.toString();
-//         console.log(alarmListStr);
-//     });
-// }
 
 function clearAllAlarms(){
     chrome.alarms.clearAll(function (wasCleared){
@@ -210,6 +202,60 @@ function extractHostname(url) {
     //find & remove "?"
     hostname = hostname.split('?')[0];
     return hostname;
+}
+
+/*
+    --- Sort tabs ---
+*/
+function sortTabsUI(){
+    chrome.tabs.query({}, function(tabs){
+        sortTabs(tabs);
+        var separatedTabsByWindow = separateTabArrayByWindow(tabs);
+        moveTabsToSortedPositionWithinWindow(separatedTabsByWindow);
+        return separatedTabsByWindow;
+    });
+}
+
+function compareFunction(tabA, tabB){
+    if (tabA.url < tabB.url)
+        return -1;
+    if (tabA.url > tabB.url)
+        return 1;
+    return 0;
+}
+
+// param tabs is Array of Chrome Tabs
+function sortTabs(tabs){
+    tabs.sort(compareFunction);
+}
+
+// param tabs is Array of Chrome Tabs
+function separateTabArrayByWindow(tabs){
+    var separatedTabsByWindow = {
+        windowIdArray: []
+    };
+    for( var i = 0; i < tabs.length ; i++ ){
+        if( separatedTabsByWindow[tabs[i].windowId] == undefined ){
+            separatedTabsByWindow[tabs[i].windowId] = [];
+            separatedTabsByWindow['windowIdArray'].push(tabs[i].windowId);
+        }
+        separatedTabsByWindow[tabs[i].windowId].push(tabs[i]);
+    }
+    return separatedTabsByWindow;
+}
+
+function moveTabsToSortedPositionWithinWindow(separatedTabsArrayByWindow){
+    var windowIdArray = separatedTabsArrayByWindow['windowIdArray'];
+    var lengthOfWindowIdArray = windowIdArray.length;
+    for (var i = 0; i < lengthOfWindowIdArray; ++i){ // each window
+        var tabsInWindowArray = separatedTabsArrayByWindow[windowIdArray[i]];
+        for (var tabInWindowIndex = 0; tabInWindowIndex < tabsInWindowArray.length; ++tabInWindowIndex){
+            var tab = tabsInWindowArray[tabInWindowIndex];
+            chrome.tabs.move(tab.id, {index: tabInWindowIndex}, function(tab){
+
+            });
+        }
+    }
 }
 
 function init() {
