@@ -9,7 +9,6 @@ var currentTabIdStr = '';
 var totalOpenTabs = 0;
 var totalActiveAlarms = 0;
 var closedTabsHistoryData = [];
-var totalClosedTabs = 0;
 
 /*
   --- Event Listeners ---
@@ -55,6 +54,9 @@ chrome.extension.onConnect.addListener(function(port) {
 
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
     --totalOpenTabs;
+    //Remove alarm on closed tab
+    var tabIdStr = tabId.toString();
+    clearAlarm(tabIdStr);
     // if totalOpenTabs <= minTabsKept remove all alarms to keep all current tabs
     if (totalOpenTabs <= minTabsKept) {
         if(totalActiveAlarms > 0) {
@@ -64,7 +66,6 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfoObj) {
 });
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
-    clearAlarm(alarm.name);
     closeTabOnAlarm(alarm.name);
 });
 
@@ -107,8 +108,8 @@ function closeTabOnAlarm(stringId) {
     });
 
     chrome.tabs.remove(intTabId, function(){
-        ++totalClosedTabs;
-        setBadgeText(totalClosedTabs.toString());
+        var totalClosedTabsStr = closedTabsHistoryData.length.toString();
+        setBadgeText(totalClosedTabsStr);
     });
 }
 
