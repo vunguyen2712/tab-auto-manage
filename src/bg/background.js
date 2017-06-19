@@ -5,10 +5,11 @@
 var timeToKeepInMinutes = 10; // double
 var minTabsKept = 15; // min number of tabs user want to keep
 
-var currentTabIdStr = "";
+var currentTabIdStr = '';
 var totalOpenTabs = 0;
 var totalActiveAlarms = 0;
 var closedTabsHistoryData = [];
+var totalClosedTabs = 0;
 
 /*
   --- Event Listeners ---
@@ -106,7 +107,8 @@ function closeTabOnAlarm(stringId) {
     });
 
     chrome.tabs.remove(intTabId, function(){
-
+        ++totalClosedTabs;
+        setBadgeText(totalClosedTabs.toString());
     });
 }
 
@@ -257,6 +259,17 @@ function moveTabsToSortedPositionWithinWindow(separatedTabsArrayByWindow){
         }
     }
 }
+
+/*
+    --- Set badeges ---
+*/
+function setBadgeText(textUpdate){
+    chrome.browserAction.setBadgeText({text: textUpdate});
+}
+
+/*
+    --- End of Set badeges ---
+*/
 
 function init() {
     // count tabs
