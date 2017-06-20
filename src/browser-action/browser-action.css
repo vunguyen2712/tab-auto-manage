@@ -313,3 +313,11 @@ hr {
     margin: 1em 0;
     padding: 0;
 }
+
+.fa.fa-magic, .fa.fa-sliders {
+    color: #CE93D8
+}
+
+.section-title {
+    color: #311B92
+}

@@ -2,8 +2,8 @@
 /*
   -- Extension setting --
 */
-var timeToKeepInMinutes = 10; // double
-var minTabsKept = 15; // min number of tabs user want to keep
+var timeToKeepInMinutes = 30; // double
+var minTabsKept = 20; // min number of tabs user want to keep
 
 var currentTabIdStr = '';
 var totalOpenTabs = 0;
@@ -44,6 +44,12 @@ chrome.extension.onConnect.addListener(function(port) {
                       clearAllAlarms();
                   }
               }
+              // Update Sync data
+              var settingData = {
+                  timeToKeepInMinutes: timeToKeepInMinutes,
+                  minTabsKept: minTabsKept
+              };
+              storeSettingData(settingData);
               port.postMessage({action: 'Recieved updated data from Popup'});
 
            } else if (msg.action === 'sortTabs'){
@@ -104,7 +110,9 @@ function closeTabOnAlarm(stringId) {
         tabInfo.tabIndex = tab.index;
         tabInfo.tabTimeStampStr = formatDateTimeAMPM(new Date());
         tabInfo.tabDomain = extractHostname(tab.url);
-        storeObject(tabInfo);
+        if(tabInfo.tabTitle !== 'New Tab'){
+            storeObject(tabInfo);
+        }
     });
 
     chrome.tabs.remove(intTabId, function(){
@@ -272,8 +280,34 @@ function setBadgeText(textUpdate){
     --- End of Set badeges ---
 */
 
+function initSettingData(){
+    chrome.storage.sync.get('settingData', function (item) {
+        var settingData = item.settingData ? item.settingData : {};
+        if (settingData && settingData.timeToKeepInMinutes){
+            timeToKeepInMinutes = settingData.timeToKeepInMinutes;
+        }
+        if (settingData && settingData.minTabsKept){
+            minTabsKept = settingData.minTabsKept;
+        }
+    });
+}
+
+/*
+  settingDataObj = {
+      timeToKeepInMinutes,
+      minTabsKept
+  }
+*/
+function storeSettingData(settingDataObj){
+    chrome.storage.sync.set({'settingData': settingDataObj}, function() {
+
+    });
+}
+
 function init() {
     // count tabs
     countOpenTabs();
+    setBadgeText('');
+    initSettingData();
     // will not set alarms for all tabs on init and start setting alarm for 1 tab when user switches tab
 }
