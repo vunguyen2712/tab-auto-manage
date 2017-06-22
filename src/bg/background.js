@@ -54,6 +54,11 @@ chrome.extension.onConnect.addListener(function(port) {
 
            } else if (msg.action === 'sortTabs'){
               sortTabsUI();
+           // Update badge when a link is clicked on the auto-closed page
+           } else if (msg.action === 'openLink') { // send from Auto-closed page
+              closedTabsHistoryData = msg.updatedTabsData;
+              var totalClosedTabsStr = closedTabsHistoryData.length.toString();
+              setBadgeText(totalClosedTabsStr);
            }
       });
  })
@@ -273,7 +278,7 @@ function moveTabsToSortedPositionWithinWindow(separatedTabsArrayByWindow){
     --- Set badeges ---
 */
 function setBadgeText(textUpdate){
-    chrome.browserAction.setBadgeText({text: textUpdate});
+    chrome.browserAction.setBadgeText({text: textUpdate === '0' ? '' : textUpdate});
 }
 
 /*
