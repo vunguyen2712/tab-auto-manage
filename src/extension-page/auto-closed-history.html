@@ -74,7 +74,7 @@
                           <tr grid-item ng-if="gridOptions.data">
                               <td id="title-and-domain" class="titleUrl mdl-data-table__cell--non-numeric">
                                   <div class="website-icon" id="icon" style="background-image: url({{item.tabFavIconUrl}})"></div>
-                                  <a href="{{item.tabUrl}}"><div ng-bind="item.tabTitle"></div></a>
+                                  <a href="{{item.tabUrl}}" ng-click="openAutoClosedLink(item)" target="_blank"><div ng-bind="item.tabTitle"></div></a>
                               </td>
                               <td id="domain" class="domain mdl-data-table__cell--non-numeric">
                                   <div ng-bind="item.tabDomain"></div>
